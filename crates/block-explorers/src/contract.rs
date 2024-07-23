@@ -391,6 +391,13 @@ impl Client {
             }
             return Err(EtherscanError::ContractCodeNotVerified(address));
         }
+
+        if result.starts_with("Missing/Invalid API Key")
+            || resp.message.starts_with("Missing/Invalid API Key")
+        {
+            return Err(EtherscanError::InvalidApiKey);
+        }
+
         let abi = serde_json::from_str(&result)
             .map_err(|error| EtherscanError::Serde { error, content: result })?;
 
